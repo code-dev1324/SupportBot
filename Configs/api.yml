@@ -17,8 +17,8 @@ API:
 
   OAuth:
     Enabled: true
-    ClientId: "1530910674551574580"
-    ClientSecret: "GIWdonM3bdFILhkg_1XWWeVQRlGf_npu"
+    ClientId: "PENDING_NEW_DISCORD_OAUTH_APP"
+    ClientSecret: "PENDING_NEW_DISCORD_OAUTH_APP"
     # Canonical callback URL (host + path). Protocol (http/https) can follow the
     # browser when UseRequestOrigin is true (default).
 
