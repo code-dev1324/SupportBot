@@ -13,6 +13,17 @@
 const fs = require("fs");
 const path = require("path");
 
+// Structures/Database.js, AIDatabase.js, TranscriptStore.js, DashboardUserStore.js
+// and several commands/addons read/write under ./Data without ever creating it,
+// and better-sqlite3 throws if the parent directory doesn't exist. Data/ isn't
+// committed to git (git doesn't track empty directories), so it must be created
+// here before any module that touches it is required below.
+for (const dir of ["./Data", "./Data/Profiles", "./Data/Transcripts"]) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
 const configStore = require("./Structures/ConfigStore.js");
 
 const Client = require("./Structures/Client.js");
