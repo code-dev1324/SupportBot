@@ -3,6 +3,9 @@
   "version": "26.2",
   "description": "SupportBot is an open-sourced support system for discord. It's completely free to use with high amounts of customization to match your own brand.",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "setup": "npm i && node index.js",
     "start": "node index.js",
