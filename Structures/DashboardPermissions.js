@@ -7,11 +7,20 @@ const CONFIG_FILES = [
   "api",
 ];
 
+// api.yml holds the session-signing SecretKey and OAuth ClientSecret.
+// It must never be reachable through the generic per-role config matrix,
+// only through fullPermissions() (owner/admin/service).
+const OWNER_ONLY_CONFIG_FILES = ["api"];
+
 const ROLES = ["owner", "admin", "moderator", "editor", "viewer", "custom"];
 
-function configMap(view, edit) {
+function configMap(view, edit, { includeOwnerOnly = false } = {}) {
   const configs = {};
   for (const file of CONFIG_FILES) {
+    if (OWNER_ONLY_CONFIG_FILES.includes(file) && !includeOwnerOnly) {
+      configs[file] = { view: false, edit: false };
+      continue;
+    }
     configs[file] = { view: Boolean(view), edit: Boolean(edit) };
   }
   return configs;
@@ -23,7 +32,7 @@ function fullPermissions() {
     logs: true,
     transcripts: true,
     settings: { view: true, update: true },
-    configs: configMap(true, true),
+    configs: configMap(true, true, { includeOwnerOnly: true }),
     users: { view: true, manage: true },
   };
 }
@@ -80,6 +89,12 @@ function normalizePermissions(input) {
       update: input.settings?.update ?? base.settings.update,
     },
     configs: CONFIG_FILES.reduce((acc, file) => {
+      if (OWNER_ONLY_CONFIG_FILES.includes(file)) {
+        // Custom roles can never be granted api.yml access, regardless of
+        // the requested override — only owner/admin (fullPermissions) can.
+        acc[file] = { view: false, edit: false };
+        return acc;
+      }
       acc[file] = {
         view: input.configs?.[file]?.view ?? base.configs[file].view,
         edit: input.configs?.[file]?.edit ?? base.configs[file].edit,
