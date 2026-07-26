@@ -8,7 +8,7 @@
   },
   "scripts": {
     "setup": "npm i && node index.js",
-    "start": "node index.js",
+    "start": "node scripts/apply-env-config.js && node index.js",
     "git:setup": "node scripts/setup-git-security.js"
   },
   "repository": {
